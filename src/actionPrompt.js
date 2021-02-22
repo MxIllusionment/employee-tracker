@@ -8,6 +8,7 @@ const actionQuestions = [
     type: "list",
     message: "What would you like to do?",
     name: "action",
+    loop: false,
     choices: [
       "View Departments",
       "View Roles",

@@ -11,7 +11,12 @@ async function askDepartment(db) {
   ];
 
   /* Construct department options from query */
-  departments.forEach(dept => deptChoices.push({ name: dept.name, value: dept.id }));
+  departments.forEach(dept => deptChoices.push(
+    {
+      name: dept.name,
+      value: dept.id
+    }
+  ));
 
   /* Form inquirer question */
   const question = [
@@ -19,6 +24,7 @@ async function askDepartment(db) {
       type: "list",
       message: "Which department would you like to view?",
       name: "department",
+      loop: false,
       choices: deptChoices
     }
   ];
@@ -46,6 +52,7 @@ async function askManager(db) {
       type: "list",
       message: "Which manager would you like to view?",
       name: "manager",
+      loop: false,
       choices: mgrChoices
     }
   ];
