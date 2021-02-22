@@ -11,7 +11,7 @@ const actionQuestions = [
     loop: false,
     choices: [
       "View Departments",
-      "View Roles",
+      "View Roles By Department",
       "View Employees By Department",
       "View Employees By Manager",
       "Add Department",
@@ -82,7 +82,7 @@ function actionPrompt(db) {
           case "View Departments":
             await viewDepartments(db);
             break;
-          case "View Roles":
+          case "View Roles By Department":
             await viewRoles(db);
             break;
           case "View Employees By Department":
