@@ -15,6 +15,10 @@ connection.connect(function (err) {
   }
 });
 
+/* Initial startup display */
+console.log("Welcome to the Employee Tracker!");
+console.log("--------------------------------");
+
 /* Process inquirer questions */
 employeePrompt(connection);
 
