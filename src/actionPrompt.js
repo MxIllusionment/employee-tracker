@@ -19,14 +19,9 @@ const actionQuestions = [
   }
 ];
 
-/* Displays all departments */
-async function viewDepartments(db) {
-  const res = await db.queryDepartments();
-  console.table(res);
-}
-
-/* Displays all roles or by department, as chosen by user*/
-async function viewRoles(db) {
+/* -------------- UTILITY Functions ------------------ */
+/* Asks user to select from available departments */
+async function askDepartment(db) {
   const departments = await db.queryDepartments();
   const deptChoices = [
     {
@@ -48,8 +43,21 @@ async function viewRoles(db) {
     }
   ];
 
-  /* Prompt for department choice and display results */
-  await inquirer.prompt(question)
+  /* Prompt for department choice */
+  return inquirer.prompt(question);
+}
+
+
+/* ---------- ACTION Functions ------------- */
+/* Displays all departments */
+async function viewDepartments(db) {
+  const res = await db.queryDepartments();
+  console.table(res);
+}
+
+/* Displays all roles or by department, as chosen by user*/
+async function viewRoles(db) {
+  await askDepartment(db)
     .then(async answers => {
       let res = await db.queryRoles(answers.department);
       console.table(res);
@@ -57,8 +65,12 @@ async function viewRoles(db) {
 }
 
 /* Displays all employees or by department, as chosen by user*/
-function viewEmployees(db) {
-  console.log("Employees");
+async function viewEmployees(db) {
+  await askDepartment(db)
+    .then(async answers => {
+      let res = await db.queryEmployees(answers.department);
+      console.table(res);
+    });
 }
 
 /* Add a department */
@@ -76,6 +88,8 @@ function addEmployee(db) {
   console.log("Add employee");
 }
 
+/* -------- Core PROMPT Function ---------- */
+
 /* Prompt for primary action */
 function actionPrompt(db) {
   return inquirer.prompt(actionQuestions)
@@ -89,7 +103,7 @@ function actionPrompt(db) {
             await viewRoles(db);
             break;
           case "View Employees":
-            viewEmployees(db);
+            await viewEmployees(db);
             break;
           case "Add Department":
             addDepartment(db);
