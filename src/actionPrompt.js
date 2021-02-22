@@ -26,8 +26,34 @@ async function viewDepartments(db) {
 }
 
 /* Displays all roles or by department, as chosen by user*/
-function viewRoles(db) {
-  console.log("Roles");
+async function viewRoles(db) {
+  const departments = await db.queryDepartments();
+  const deptChoices = [
+    {
+      name: "All",
+      value: 0
+    }
+  ];
+
+  /* Construct department options from query */
+  departments.forEach(dept => deptChoices.push({ name: dept.name, value: dept.id }));
+
+  /* Form inquirer question */
+  const question = [
+    {
+      type: "list",
+      message: "Which department would you like to view?",
+      name: "department",
+      choices: deptChoices
+    }
+  ];
+
+  /* Prompt for department choice and display results */
+  await inquirer.prompt(question)
+    .then(async answers => {
+      let res = await db.queryRoles(answers.department);
+      console.table(res);
+    });
 }
 
 /* Displays all employees or by department, as chosen by user*/
@@ -60,7 +86,7 @@ function actionPrompt(db) {
             await viewDepartments(db);
             break;
           case "View Roles":
-            viewRoles(db);
+            await viewRoles(db);
             break;
           case "View Employees":
             viewEmployees(db);
