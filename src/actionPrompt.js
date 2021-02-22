@@ -17,6 +17,7 @@ const actionQuestions = [
       "Add Department",
       "Add Role",
       "Add Employee",
+      "Update Employee",
       "Exit"
     ]
   }
@@ -71,6 +72,11 @@ function addEmployee(db) {
   console.log("Add employee");
 }
 
+/* Update an employee */
+function updateEmployee(db) {
+  console.log("Update employee");
+}
+
 /* -------- Core PROMPT Function ---------- */
 
 /* Prompt for primary action */
@@ -99,6 +105,9 @@ function actionPrompt(db) {
             break;
           case "Add Employee":
             addEmployee(db);
+            break;
+          case "Update Employee":
+            updateEmployee(db);
             break;
         }
         return actionPrompt(db);
