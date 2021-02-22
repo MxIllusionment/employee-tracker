@@ -1,6 +1,8 @@
 const inquirer = require("inquirer");
 const cTable = require("console.table");
 
+var gDB;
+
 /* Inquirer questions for basic actions */
 const actionQuestions = [
   {
@@ -10,7 +12,8 @@ const actionQuestions = [
     choices: [
       "View Departments",
       "View Roles",
-      "View Employees",
+      "View Employees By Department",
+      "View Employees By Manager",
       "Add Department",
       "Add Role",
       "Add Employee",
@@ -21,8 +24,8 @@ const actionQuestions = [
 
 /* -------------- UTILITY Functions ------------------ */
 /* Asks user to select from available departments */
-async function askDepartment(db) {
-  const departments = await db.queryDepartments();
+async function askDepartment() {
+  const departments = await gDB.queryDepartments();
   const deptChoices = [
     {
       name: "All",
@@ -47,44 +50,80 @@ async function askDepartment(db) {
   return inquirer.prompt(question);
 }
 
+/* Asks user to select from available managers */
+async function askManager() {
+  const managers = await gDB.queryManagers();
+  const mgrChoices = [];
+
+  /* Construct manager options from query */
+  managers.forEach(mgr => mgrChoices.push(
+    {
+      name: `${mgr.first_name} ${mgr.last_name}`,
+      value: mgr.id
+    }
+  ));
+
+  /* Form inquirer question */
+  const question = [
+    {
+      type: "list",
+      message: "Which manager would you like to view?",
+      name: "manager",
+      choices: mgrChoices
+    }
+  ];
+
+  /* Prompt for manager choice */
+  return inquirer.prompt(question);
+}
+
 
 /* ---------- ACTION Functions ------------- */
 /* Displays all departments */
-async function viewDepartments(db) {
-  const res = await db.queryDepartments();
+async function viewDepartments() {
+  const res = await gDB.queryDepartments();
   console.table(res);
 }
 
 /* Displays all roles or by department, as chosen by user*/
-async function viewRoles(db) {
-  await askDepartment(db)
+async function viewRoles() {
+  await askDepartment()
     .then(async answers => {
-      let res = await db.queryRoles(answers.department);
+      let res = await gDB.queryRoles(answers.department);
       console.table(res);
     });
 }
 
 /* Displays all employees or by department, as chosen by user*/
-async function viewEmployees(db) {
-  await askDepartment(db)
+async function viewEmployeesByDept() {
+  await askDepartment()
     .then(async answers => {
-      let res = await db.queryEmployees(answers.department);
+      let res = await gDB.queryEmployees("department", answers.department);
+      console.table(res);
+    });
+}
+
+/* Displays employees based on a specific manager */
+async function viewEmployeesByMgr() {
+  await askManager()
+    .then(async answers => {
+      let res = await gDB.queryEmployees("manager", answers.manager);
       console.table(res);
     });
 }
 
 /* Add a department */
-function addDepartment(db) {
+function addDepartment() {
   console.log("Add department");
 }
 
 /* Add a role */
-function addRole(db) {
+function addRole() {
   console.log("Add role");
 }
 
 /* Add an employee */
-function addEmployee(db) {
+function addEmployee() {
   console.log("Add employee");
 }
 
@@ -92,27 +131,31 @@ function addEmployee(db) {
 
 /* Prompt for primary action */
 function actionPrompt(db) {
+  gDB = db;
   return inquirer.prompt(actionQuestions)
     .then(async answers => {
       if (answers.action !== "Exit") {
         switch (answers.action) {
           case "View Departments":
-            await viewDepartments(db);
+            await viewDepartments();
             break;
           case "View Roles":
-            await viewRoles(db);
+            await viewRoles();
             break;
-          case "View Employees":
-            await viewEmployees(db);
+          case "View Employees By Department":
+            await viewEmployeesByDept();
+            break;
+          case "View Employees By Manager":
+            await viewEmployeesByMgr();
             break;
           case "Add Department":
-            addDepartment(db);
+            addDepartment();
             break;
           case "Add Role":
-            addRole(db);
+            addRole();
             break;
           case "Add Employee":
-            addEmployee(db);
+            addEmployee();
             break;
         }
         return actionPrompt(db);
