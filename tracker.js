@@ -1,26 +1,18 @@
-const mysql = require("mysql");
+const Database = require("./lib/Database");
 const employeePrompt = require("./src/employeePrompt");
 
-/* Connect to database */
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "12345678"
-});
-
-connection.connect(function (err) {
-  if (err) {
-    console.error("Error connecting: " + err.stack);
-    return;
-  }
-});
+/* Start up database connec tion */
+const db = new Database();
 
 /* Initial startup display */
 console.log("Welcome to the Employee Tracker!");
 console.log("--------------------------------");
 
 /* Process inquirer questions */
-employeePrompt(connection);
+employeePrompt(db)
+  .then(() => {
+    console.log("--------------------------------");
+    console.log("Exiting Employee Tracker. Farewell!");
+    db.exit();
+  });
 
-/* Close database connection */
-connection.end();
