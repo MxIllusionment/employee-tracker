@@ -1,7 +1,6 @@
 const inquirer = require("inquirer");
 const cTable = require("console.table");
-
-var gDB;
+const ask = require("./askSelector");
 
 /* Inquirer questions for basic actions */
 const actionQuestions = [
@@ -22,108 +21,52 @@ const actionQuestions = [
   }
 ];
 
-/* -------------- UTILITY Functions ------------------ */
-/* Asks user to select from available departments */
-async function askDepartment() {
-  const departments = await gDB.queryDepartments();
-  const deptChoices = [
-    {
-      name: "All",
-      value: 0
-    }
-  ];
-
-  /* Construct department options from query */
-  departments.forEach(dept => deptChoices.push({ name: dept.name, value: dept.id }));
-
-  /* Form inquirer question */
-  const question = [
-    {
-      type: "list",
-      message: "Which department would you like to view?",
-      name: "department",
-      choices: deptChoices
-    }
-  ];
-
-  /* Prompt for department choice */
-  return inquirer.prompt(question);
-}
-
-/* Asks user to select from available managers */
-async function askManager() {
-  const managers = await gDB.queryManagers();
-  const mgrChoices = [];
-
-  /* Construct manager options from query */
-  managers.forEach(mgr => mgrChoices.push(
-    {
-      name: `${mgr.first_name} ${mgr.last_name}`,
-      value: mgr.id
-    }
-  ));
-
-  /* Form inquirer question */
-  const question = [
-    {
-      type: "list",
-      message: "Which manager would you like to view?",
-      name: "manager",
-      choices: mgrChoices
-    }
-  ];
-
-  /* Prompt for manager choice */
-  return inquirer.prompt(question);
-}
-
-
 /* ---------- ACTION Functions ------------- */
 /* Displays all departments */
-async function viewDepartments() {
-  const res = await gDB.queryDepartments();
+async function viewDepartments(db) {
+  const res = await db.queryDepartments();
   console.table(res);
 }
 
 /* Displays all roles or by department, as chosen by user*/
-async function viewRoles() {
-  await askDepartment()
+async function viewRoles(db) {
+  await ask.department(db)
     .then(async answers => {
-      let res = await gDB.queryRoles(answers.department);
+      let res = await db.queryRoles(answers.department);
       console.table(res);
     });
 }
 
 /* Displays all employees or by department, as chosen by user*/
-async function viewEmployeesByDept() {
-  await askDepartment()
+async function viewEmployeesByDept(db) {
+  await ask.department(db)
     .then(async answers => {
-      let res = await gDB.queryEmployees("department", answers.department);
+      let res = await db.queryEmployees("department", answers.department);
       console.table(res);
     });
 }
 
 /* Displays employees based on a specific manager */
-async function viewEmployeesByMgr() {
-  await askManager()
+async function viewEmployeesByMgr(db) {
+  await ask.manager(db)
     .then(async answers => {
-      let res = await gDB.queryEmployees("manager", answers.manager);
+      let res = await db.queryEmployees("manager", answers.manager);
       console.table(res);
     });
 }
 
 /* Add a department */
-function addDepartment() {
+function addDepartment(db) {
   console.log("Add department");
 }
 
 /* Add a role */
-function addRole() {
+function addRole(db) {
   console.log("Add role");
 }
 
 /* Add an employee */
-function addEmployee() {
+function addEmployee(db) {
   console.log("Add employee");
 }
 
@@ -131,31 +74,30 @@ function addEmployee() {
 
 /* Prompt for primary action */
 function actionPrompt(db) {
-  gDB = db;
   return inquirer.prompt(actionQuestions)
     .then(async answers => {
       if (answers.action !== "Exit") {
         switch (answers.action) {
           case "View Departments":
-            await viewDepartments();
+            await viewDepartments(db);
             break;
           case "View Roles":
-            await viewRoles();
+            await viewRoles(db);
             break;
           case "View Employees By Department":
-            await viewEmployeesByDept();
+            await viewEmployeesByDept(db);
             break;
           case "View Employees By Manager":
-            await viewEmployeesByMgr();
+            await viewEmployeesByMgr(db);
             break;
           case "Add Department":
-            addDepartment();
+            addDepartment(db);
             break;
           case "Add Role":
-            addRole();
+            addRole(db);
             break;
           case "Add Employee":
-            addEmployee();
+            addEmployee(db);
             break;
         }
         return actionPrompt(db);
