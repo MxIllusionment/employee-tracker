@@ -1,9 +1,9 @@
 -- DROP & CREATE database --
-DROP DATABASE IF EXISTS business_db;
-CREATE DATABASE business_db;
+DROP DATABASE IF EXISTS employee_tracker_db;
+CREATE DATABASE employee_tracker_db;
 
--- USE business_db for all transactions --
-USE business_db;
+-- USE employee_tracker_db for all transactions --
+USE employee_tracker_db;
 
 -- CREATE department table --
 CREATE TABLE department (
