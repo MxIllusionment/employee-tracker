@@ -1,5 +1,5 @@
 const Database = require("./lib/Database");
-const employeePrompt = require("./src/employeePrompt");
+const actionPrompt = require("./src/actionPrompt");
 
 /* Start up database connec tion */
 const db = new Database();
@@ -9,7 +9,7 @@ console.log("Welcome to the Employee Tracker!");
 console.log("--------------------------------");
 
 /* Process inquirer questions */
-employeePrompt(db)
+actionPrompt(db)
   .then(() => {
     console.log("--------------------------------");
     console.log("Exiting Employee Tracker. Farewell!");

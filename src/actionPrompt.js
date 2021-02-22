@@ -20,8 +20,9 @@ const actionQuestions = [
 ];
 
 /* Displays all departments */
-function viewDepartments(db) {
-  console.log("Departments");
+async function viewDepartments(db) {
+  const res = await db.queryDepartments();
+  console.table(res);
 }
 
 /* Displays all roles or by department, as chosen by user*/
@@ -49,14 +50,14 @@ function addEmployee(db) {
   console.log("Add employee");
 }
 
-function employeePrompt(db) {
+/* Prompt for primary action */
+function actionPrompt(db) {
   return inquirer.prompt(actionQuestions)
-    .then(answers => {
-      /* Drop out of then() if Exit is chosen */
-      if (answers.action != "Exit") {
+    .then(async answers => {
+      if (answers.action !== "Exit") {
         switch (answers.action) {
           case "View Departments":
-            viewDepartments(db);
+            await viewDepartments(db);
             break;
           case "View Roles":
             viewRoles(db);
@@ -74,9 +75,9 @@ function employeePrompt(db) {
             addEmployee(db);
             break;
         }
-        return employeePrompt(db);
+        return actionPrompt(db);
       }
     });
 }
 
-module.exports = employeePrompt;
+module.exports = actionPrompt;
