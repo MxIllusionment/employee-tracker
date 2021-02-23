@@ -1,6 +1,6 @@
 const inquirer = require("inquirer");
 require("console.table");
-const ask = require("./askSelector");
+const read = require("./askRead");
 const create = require("./askCreate");
 const update = require("./askUpdate");
 const del = require("./askDelete");
@@ -48,7 +48,7 @@ function viewDepartments(db) {
 
 /* Displays all roles or by department, as chosen by user*/
 async function viewRoles(db) {
-  return ask.department(db)
+  return read.department(db)
     .then(answers => {
       if (!answers) {
         return [];
@@ -60,7 +60,7 @@ async function viewRoles(db) {
 
 /* Displays all employees or by department, as chosen by user*/
 async function viewEmployeesByDept(db) {
-  return ask.department(db)
+  return read.department(db)
     .then(answers => {
       if (!answers) {
         return [];
@@ -72,7 +72,7 @@ async function viewEmployeesByDept(db) {
 
 /* Displays employees based on a specific manager */
 async function viewEmployeesByMgr(db) {
-  return ask.manager(db)
+  return read.manager(db)
     .then(answers => {
       if (!answers) {
         return [];
