@@ -1,5 +1,5 @@
 const inquirer = require("inquirer");
-const cTable = require("console.table");
+require("console.table");
 const ask = require("./askSelector");
 
 /* Inquirer questions for basic actions */
@@ -25,36 +25,29 @@ const actionQuestions = [
 
 /* ---------- ACTION Functions ------------- */
 /* Displays all departments */
-async function viewDepartments(db) {
-  const res = await db.queryDepartments();
-  console.table(res);
+function viewDepartments(db) {
+  return db.queryDepartments().then(res => console.table(res));
 }
 
 /* Displays all roles or by department, as chosen by user*/
 async function viewRoles(db) {
-  await ask.department(db)
-    .then(async answers => {
-      let res = await db.queryRoles(answers.department);
-      console.table(res);
-    });
+  return ask.department(db)
+    .then(answers => db.queryRoles(answers.department))
+    .then(res => console.table(res));
 }
 
 /* Displays all employees or by department, as chosen by user*/
 async function viewEmployeesByDept(db) {
-  await ask.department(db)
-    .then(async answers => {
-      let res = await db.queryEmployees("department", answers.department);
-      console.table(res);
-    });
+  return ask.department(db)
+    .then(answers => db.queryEmployees("department", answers.department))
+    .then(res => console.table(res));
 }
 
 /* Displays employees based on a specific manager */
 async function viewEmployeesByMgr(db) {
-  await ask.manager(db)
-    .then(async answers => {
-      let res = await db.queryEmployees("manager", answers.manager);
-      console.table(res);
-    });
+  return ask.manager(db)
+    .then(answers => db.queryEmployees("manager", answers.manager))
+    .then(res => console.table(res));
 }
 
 /* Add a department */
