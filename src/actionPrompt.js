@@ -100,7 +100,7 @@ async function addRole(db) {
     })
     .then(res => {
       if (!res) {
-        return console.log("\nNo departments found\n");
+        return displayView([], "departments");
       }
       return console.log(`\n${res.affectedRows} role added\n`)
     });
@@ -117,7 +117,7 @@ async function addEmployee(db) {
     })
     .then(res => {
       if (!res) {
-        return console.log("\nNo roles found\n");
+        return displayView([], "roles");
       }
       return console.log(`\n${res.affectedRows} employee added\n`)
     });
@@ -142,7 +142,7 @@ async function updateEmployee(db) {
     })
     .then(res => {
       if (!res) {
-        return console.log("\nNo employees found\n");
+        return displayView([], "employees");
       }
       return console.log(`\n${res.affectedRows} employee updated\n`)
     });
@@ -159,7 +159,7 @@ async function deleteEmployee(db) {
     })
     .then(res => {
       if (!res) {
-        return console.log("\nNo employees found\n");
+        return displayView([], "employees");
       }
       return console.log(`\n${res.affectedRows} employee deleted\n`)
     });
@@ -178,7 +178,7 @@ async function deleteRole(db) {
     })
     .then(res => {
       if (res === null) {
-        return console.log("\nNo roles found\n");
+        return displayView([], "roles");
       } else if (res === false) {
         return console.log("\nDelete canceled\n");
       }
@@ -199,7 +199,7 @@ async function deleteDepartment(db) {
     })
     .then(res => {
       if (res === null) {
-        return console.log("\nNo departments found\n");
+        return displayView([], "departments");
       } else if (res === false) {
         return console.log("\nDelete canceled\n");
       }
