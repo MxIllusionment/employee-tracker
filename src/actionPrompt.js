@@ -102,8 +102,20 @@ async function addRole(db) {
 }
 
 /* Add an employee */
-function addEmployee(db) {
-  console.log("Add employee");
+async function addEmployee(db) {
+  return create.employee(db)
+    .then(answers => {
+      if (!answers) {
+        return null;
+      }
+      return db.addEmployee(answers);
+    })
+    .then(res => {
+      if (!res) {
+        return console.log("\nNo roles available\n");
+      }
+      return console.log(`\n${res.affectedRows} employee added\n`)
+    });
 }
 
 /* Update an employee */
@@ -138,7 +150,7 @@ function actionPrompt(db) {
             await addRole(db);
             break;
           case "Add Employee":
-            addEmployee(db);
+            await addEmployee(db);
             break;
           case "Update Employee":
             updateEmployee(db);

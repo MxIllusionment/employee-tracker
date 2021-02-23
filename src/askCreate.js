@@ -53,8 +53,72 @@ async function createRole(db) {
   return inquirer.prompt(questions);
 }
 
+/* Asks for information needed to create an employee */
+async function createEmployee(db) {
+  const roles = await db.queryRoles();
+  const employees = await db.queryEmployees();
+  let roleChoices = [];
+  let mgrChoices = [
+    {
+      name: "None",
+      value: null
+    }
+  ];
+
+  /* Construct role options from query */
+  roles.forEach(role => roleChoices.push(
+    {
+      name: role.title,
+      value: role.id
+    }
+  ));
+
+  /* If there are no roles, return a value to indicate this */
+  if (roleChoices.length === 0) {
+    return null;
+  }
+
+  /* Construct manager options from query */
+  employees.forEach(employee => mgrChoices.push(
+    {
+      name: `${employee.first_name} ${employee.last_name}`,
+      value: employee.id
+    }
+  ));
+
+  const questions = [
+    {
+      type: "list",
+      name: "role_id",
+      message: "What role does the new employee have?",
+      loop: false,
+      choices: roleChoices
+    },
+    {
+      type: "input",
+      name: "first_name",
+      message: "What is the first name of the new employee?"
+    },
+    {
+      type: "input",
+      name: "last_name",
+      message: "What is the last name of the new employee?"
+    },
+    {
+      type: "list",
+      name: "manager_id",
+      message: "Who is the new employee's manager?",
+      choices: mgrChoices,
+      when: () => mgrChoices.length > 1
+    }
+  ];
+
+  return inquirer.prompt(questions);
+}
+
 
 module.exports = {
   department: createDepartment,
-  role: createRole
+  role: createRole,
+  employee: createEmployee
 }
