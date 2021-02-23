@@ -18,6 +18,15 @@ async function askDepartment(db) {
     }
   ));
 
+  /* If there are no departments, return a value to indicate this */
+  if (deptChoices.length === 1) {
+    return [
+      {
+        department: -1
+      }
+    ];
+  }
+
   /* Form inquirer question */
   const question = [
     {
@@ -45,6 +54,15 @@ async function askManager(db) {
       value: mgr.id
     }
   ));
+
+  /* If there are no managers, return a value to indicate this */
+  if (mgrChoices.length === 0) {
+    return [
+      {
+        manager: -1
+      }
+    ];
+  }
 
   /* Form inquirer question */
   const question = [
