@@ -23,36 +23,55 @@ const actionQuestions = [
   }
 ];
 
+/* ---------- UTILITY Functions ------------- */
+/* Displays view results as a table or displays a "none found" message */
+function displayView(res, type) {
+  if (res.length > 0) {
+    console.table(res);
+  } else {
+    console.log(`\nNo ${type} found\n`);
+  }
+}
+
 /* ---------- ACTION Functions ------------- */
 /* Displays all departments */
 function viewDepartments(db) {
-  return db.queryDepartments().then(res => console.table(res));
+  return db.queryDepartments().then(res => displayView(res, "departments"));
 }
 
 /* Displays all roles or by department, as chosen by user*/
 async function viewRoles(db) {
   return ask.department(db)
     .then(answers => db.queryRoles(answers.department))
-    .then(res => console.table(res));
+    .then(res => displayView(res, "roles"));
 }
 
 /* Displays all employees or by department, as chosen by user*/
 async function viewEmployeesByDept(db) {
   return ask.department(db)
     .then(answers => db.queryEmployees("department", answers.department))
-    .then(res => console.table(res));
+    .then(res => displayView(res, "employees"));
 }
 
 /* Displays employees based on a specific manager */
 async function viewEmployeesByMgr(db) {
   return ask.manager(db)
     .then(answers => db.queryEmployees("manager", answers.manager))
-    .then(res => console.table(res));
+    .then(res => displayView(res, "employees"));
 }
 
 /* Add a department */
-function addDepartment(db) {
-  console.log("Add department");
+async function addDepartment(db) {
+  const questions = [
+    {
+      type: "input",
+      name: "name",
+      message: "What is the name of the new department?"
+    }
+  ];
+  return inquirer.prompt(questions)
+    .then(answers => db.addDepartment(answers))
+    .then(res => console.log(`${res.affectedRows} department added\n`))
 }
 
 /* Add a role */
@@ -91,7 +110,7 @@ function actionPrompt(db) {
             await viewEmployeesByMgr(db);
             break;
           case "Add Department":
-            addDepartment(db);
+            await addDepartment(db);
             break;
           case "Add Role":
             addRole(db);
