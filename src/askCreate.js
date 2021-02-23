@@ -11,6 +11,9 @@ function createDepartment() {
         if (name.trim().length < 5) {
           return "Department name must be at least 5 characters";
         }
+        if (name.trim().length > 30) {
+          return "Department name can be at most 30 characters";
+        }
         return true;
       },
       filter: name => name.trim()
@@ -21,6 +24,7 @@ function createDepartment() {
 
 /* Asks for information needed to create a role */
 async function createRole(db) {
+  const MAX_SALARY = 99999999.99;
   const departments = await db.queryDepartments();
   let deptChoices = [];
 
@@ -53,6 +57,9 @@ async function createRole(db) {
         if (title.trim().length < 5) {
           return "Role title must be at least 5 characters";
         }
+        if (title.trim().length > 30) {
+          return "Role title can be at most 30 characters";
+        }
         return true;
       },
       filter: title => title.trim()
@@ -62,13 +69,21 @@ async function createRole(db) {
       name: "salary",
       message: "What is the salary for the new role?",
       validate: salary => {
-        if (isNaN(parseFloat(salary))) {
+        let float = parseFloat(salary);
+        if (isNaN(float)) {
           return "Salary must be a valid floating point value";
+        }
+        if (float <= 0) {
+          return "Salary must be a positive number";
+        }
+        if (float > MAX_SALARY) {
+          return `Maximum salary of ${MAX_SALARY} exceeded`;
         }
         return true;
       },
       filter: salary => {
-        if (isNaN(parseFloat(salary))) {
+        let float = parseFloat(salary);
+        if (isNaN(float) || float > MAX_SALARY || float <= 0) {
           return salary;
         }
         return parseFloat(salary);
@@ -128,6 +143,9 @@ async function createEmployee(db) {
         if (name.trim().length < 2) {
           return "First name must be at least 2 characters";
         }
+        if (name.trim().length > 30) {
+          return "First name can be at most 30 characters";
+        }
         return true;
       },
       filter: name => name.trim()
@@ -139,6 +157,9 @@ async function createEmployee(db) {
       validate: name => {
         if (name.trim().length < 2) {
           return "Last name must be at least 2 characters";
+        }
+        if (name.trim().length > 30) {
+          return "Last name can be at most 30 characters";
         }
         return true;
       },
