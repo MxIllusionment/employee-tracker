@@ -81,7 +81,7 @@ async function createEmployee(db) {
   /* Construct manager options from query */
   employees.forEach(employee => mgrChoices.push(
     {
-      name: `${employee.first_name} ${employee.last_name}`,
+      name: `${employee.first_name} ${employee.last_name} (${employee.role})`,
       value: employee.id
     }
   ));

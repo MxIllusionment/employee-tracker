@@ -66,7 +66,7 @@ async function updateEmployee(db) {
           if (employee.id != answers.id) {
             mgrChoices.push(
               {
-                name: `${employee.first_name} ${employee.last_name}`,
+                name: `${employee.first_name} ${employee.last_name} (${employee.role})`,
                 value: employee.id
               }
             )
