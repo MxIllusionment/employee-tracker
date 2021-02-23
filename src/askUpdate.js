@@ -37,6 +37,7 @@ async function updateEmployee(db) {
       type: "list",
       name: "role_id",
       message: "What role would you like to assign to the employee?",
+      loop: false,
       choices: () => {
         let roleChoices = [];
 
@@ -54,6 +55,7 @@ async function updateEmployee(db) {
       type: "list",
       name: "manager_id",
       message: "Which manager would you like to assign to the employee?",
+      loop: false,
       choices: answers => {
         let mgrChoices = [
           {
@@ -79,7 +81,6 @@ async function updateEmployee(db) {
   ];
 
   return inquirer.prompt(questions);
-
 }
 
 

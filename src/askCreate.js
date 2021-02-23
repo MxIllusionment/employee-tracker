@@ -6,7 +6,14 @@ function createDepartment() {
     {
       type: "input",
       name: "name",
-      message: "What is the name of the new department?"
+      message: "What is the name of the new department?",
+      validate: name => {
+        if (name.trim().length < 5) {
+          return "Department name must be at least 5 characters";
+        }
+        return true;
+      },
+      filter: name => name.trim()
     }
   ];
   return inquirer.prompt(questions);
@@ -42,11 +49,30 @@ async function createRole(db) {
       type: "input",
       name: "title",
       message: "What is the title associated with the new role?",
+      validate: title => {
+        if (title.trim().length < 5) {
+          return "Role title must be at least 5 characters";
+        }
+        return true;
+      },
+      filter: title => title.trim()
     },
     {
       type: "input",
       name: "salary",
-      message: "What is the salary for the new role?"
+      message: "What is the salary for the new role?",
+      validate: salary => {
+        if (isNaN(parseFloat(salary))) {
+          return "Salary must be a valid floating point value";
+        }
+        return true;
+      },
+      filter: salary => {
+        if (isNaN(parseFloat(salary))) {
+          return salary;
+        }
+        return parseFloat(salary);
+      },
     }
   ];
 
@@ -97,12 +123,26 @@ async function createEmployee(db) {
     {
       type: "input",
       name: "first_name",
-      message: "What is the first name of the new employee?"
+      message: "What is the first name of the new employee?",
+      validate: name => {
+        if (name.trim().length < 2) {
+          return "First name must be at least 2 characters";
+        }
+        return true;
+      },
+      filter: name => name.trim()
     },
     {
       type: "input",
       name: "last_name",
-      message: "What is the last name of the new employee?"
+      message: "What is the last name of the new employee?",
+      validate: name => {
+        if (name.trim().length < 2) {
+          return "Last name must be at least 2 characters";
+        }
+        return true;
+      },
+      filter: name => name.trim()
     },
     {
       type: "list",
