@@ -4,7 +4,7 @@ const actionPrompt = require("./src/actionPrompt");
 /* Start up database connection */
 const db = new Database();
 
-db.start()
+db.open()
   .then(() => {
     /* Initial startup display */
     console.log("Welcome to the Employee Tracker!");
@@ -17,7 +17,7 @@ db.start()
   .then(() => {
     console.log("--------------------------------");
     console.log("Exiting Employee Tracker. Farewell!");
-    db.exit();
+    db.close();
   });
 
 
