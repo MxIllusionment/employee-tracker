@@ -1,6 +1,7 @@
 const inquirer = require("inquirer");
 require("console.table");
 const ask = require("./askSelector");
+const create = require("./askCreate");
 
 /* Inquirer questions for basic actions */
 const actionQuestions = [
@@ -44,7 +45,7 @@ function viewDepartments(db) {
 async function viewRoles(db) {
   return ask.department(db)
     .then(answers => {
-      if (answers.department < 0) {
+      if (!answers) {
         return [];
       }
       return db.queryRoles(answers.department);
@@ -56,7 +57,7 @@ async function viewRoles(db) {
 async function viewEmployeesByDept(db) {
   return ask.department(db)
     .then(answers => {
-      if (answers.department < 0) {
+      if (!answers) {
         return [];
       }
       return db.queryEmployees("department", answers.department);
@@ -68,7 +69,7 @@ async function viewEmployeesByDept(db) {
 async function viewEmployeesByMgr(db) {
   return ask.manager(db)
     .then(answers => {
-      if (answers.manager < 0) {
+      if (!answers) {
         return [];
       }
       return db.queryEmployees("manager", answers.manager);
@@ -78,21 +79,26 @@ async function viewEmployeesByMgr(db) {
 
 /* Add a department */
 async function addDepartment(db) {
-  const questions = [
-    {
-      type: "input",
-      name: "name",
-      message: "What is the name of the new department?"
-    }
-  ];
-  return inquirer.prompt(questions)
+  return create.department()
     .then(answers => db.addDepartment(answers))
-    .then(res => console.log(`\n${res.affectedRows} department added\n`))
+    .then(res => console.log(`\n${res.affectedRows} department added\n`));
 }
 
 /* Add a role */
-function addRole(db) {
-  console.log("Add role");
+async function addRole(db) {
+  return create.role(db)
+    .then(answers => {
+      if (!answers) {
+        return null;
+      }
+      return db.addRole(answers);
+    })
+    .then(res => {
+      if (!res) {
+        return console.log("\nNo departments available\n");
+      }
+      return console.log(`\n${res.affectedRows} role added\n`)
+    });
 }
 
 /* Add an employee */
@@ -129,7 +135,7 @@ function actionPrompt(db) {
             await addDepartment(db);
             break;
           case "Add Role":
-            addRole(db);
+            await addRole(db);
             break;
           case "Add Employee":
             addEmployee(db);

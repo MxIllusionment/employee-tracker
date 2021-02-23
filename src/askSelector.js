@@ -20,11 +20,7 @@ async function askDepartment(db) {
 
   /* If there are no departments, return a value to indicate this */
   if (deptChoices.length === 1) {
-    return [
-      {
-        department: -1
-      }
-    ];
+    return null;
   }
 
   /* Form inquirer question */
@@ -57,11 +53,7 @@ async function askManager(db) {
 
   /* If there are no managers, return a value to indicate this */
   if (mgrChoices.length === 0) {
-    return [
-      {
-        manager: -1
-      }
-    ];
+    return null;
   }
 
   /* Form inquirer question */
