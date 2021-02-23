@@ -1,6 +1,6 @@
 const inquirer = require("inquirer");
 
-/* Asks user to select from available employees */
+/* Asks user to select from available employees to delete */
 async function deleteEmployee(db) {
   const employees = await db.queryEmployees();
   let empChoices = [];
@@ -29,10 +29,50 @@ async function deleteEmployee(db) {
     }
   ];
 
-  /* Prompt for manager choice */
+  /* Prompt for employee choice */
+  return inquirer.prompt(question);
+}
+
+/* Asks user to select from available roles to delete */
+async function deleteRole(db) {
+  const roles = await db.queryRoles();
+  let roleChoices = [];
+
+  /* Construct role options from query */
+  roles.forEach(role => roleChoices.push(
+    {
+      name: role.title,
+      value: role.id
+    }
+  ));
+
+  /* If there are no roles, return a value to indicate this */
+  if (roleChoices.length === 0) {
+    return null;
+  }
+
+  /* Form inquirer question */
+  const question = [
+    {
+      type: "list",
+      message: "Which role would you like to delete?",
+      name: "role",
+      loop: false,
+      choices: roleChoices
+    },
+    {
+      type: "confirm",
+      message: answers => "This will delete all employees with this role! Are you sure?",
+      name: "confirm",
+      default: false
+    }
+  ];
+
+  /* Prompt for role choice */
   return inquirer.prompt(question);
 }
 
 module.exports = {
-  employee: deleteEmployee
+  employee: deleteEmployee,
+  role: deleteRole
 };

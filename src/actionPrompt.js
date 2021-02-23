@@ -22,6 +22,7 @@ const actionQuestions = [
       "Add Employee",
       "Update Employee",
       "Delete Employee",
+      "Delete Role",
       "Exit"
     ]
   }
@@ -154,12 +155,33 @@ async function deleteEmployee(db) {
         return null;
       }
       return db.deleteEmployee(answers.employee)
-        .then(res => {
-          if (!res) {
-            return console.log("\nNo employees found\n");
-          }
-          return console.log(`\n${res.affectedRows} employee deleted\n`)
-        });
+    })
+    .then(res => {
+      if (!res) {
+        return console.log("\nNo employees found\n");
+      }
+      return console.log(`\n${res.affectedRows} employee deleted\n`)
+    });
+}
+
+/* Deletes a selected role */
+async function deleteRole(db) {
+  return del.role(db)
+    .then(answers => {
+      if (!answers) {
+        return null;
+      } else if (answers.confirm) {
+        return db.deleteRole(answers.role);
+      }
+      return false;
+    })
+    .then(res => {
+      if (res === null) {
+        return console.log("\nNo roles found\n");
+      } else if (res === false) {
+        return console.log("\nDelete aborted\n");
+      }
+      return console.log(`\n${res.affectedRows} role deleted\n`)
     });
 }
 /* -------- Core PROMPT Function ---------- */
@@ -196,6 +218,9 @@ function actionPrompt(db) {
             break;
           case "Delete Employee":
             await deleteEmployee(db);
+            break;
+          case "Delete Role":
+            await deleteRole(db);
             break;
         }
         return actionPrompt(db);
