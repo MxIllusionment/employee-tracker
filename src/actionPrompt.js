@@ -2,6 +2,7 @@ const inquirer = require("inquirer");
 require("console.table");
 const ask = require("./askSelector");
 const create = require("./askCreate");
+const update = require("./askUpdate");
 
 /* Inquirer questions for basic actions */
 const actionQuestions = [
@@ -119,8 +120,28 @@ async function addEmployee(db) {
 }
 
 /* Update an employee */
-function updateEmployee(db) {
-  console.log("Update employee");
+async function updateEmployee(db) {
+  return update.employee(db)
+    .then(answers => {
+      if (!answers) {
+        return null;
+      }
+      if (answers.role_id) {
+        return db.updateEmployee(answers.id, {
+          role_id: answers.role_id
+        });
+      } else {
+        return db.updateEmployee(answers.id, {
+          manager_id: answers.manager_id
+        });
+      }
+    })
+    .then(res => {
+      if (!res) {
+        return console.log("\nNo employees found\n");
+      }
+      return console.log(`\n${res.affectedRows} employee updated\n`)
+    });
 }
 
 /* -------- Core PROMPT Function ---------- */
@@ -153,7 +174,7 @@ function actionPrompt(db) {
             await addEmployee(db);
             break;
           case "Update Employee":
-            updateEmployee(db);
+            await updateEmployee(db);
             break;
         }
         return actionPrompt(db);
