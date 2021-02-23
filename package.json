@@ -5,8 +5,8 @@
   "main": "tracker.js",
   "scripts": {
     "start": "node tracker.js",
-    "schema": "mysql --user=root --password=12345678 < schema.sql",
-    "seed": "mysql --user=root --password=12345678 < seed.sql"
+    "schema": "mysql --user=root -p < schema.sql",
+    "seed": "mysql --user=root -p < seed.sql"
   },
   "repository": {
     "type": "git",
