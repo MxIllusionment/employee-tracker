@@ -23,6 +23,7 @@ const actionQuestions = [
       "Update Employee",
       "Delete Employee",
       "Delete Role",
+      "Delete Department",
       "Exit"
     ]
   }
@@ -184,6 +185,28 @@ async function deleteRole(db) {
       return console.log(`\n${res.affectedRows} role deleted\n`)
     });
 }
+
+/* Deletes a selected department */
+async function deleteDepartment(db) {
+  return del.department(db)
+    .then(answers => {
+      if (!answers) {
+        return null;
+      } else if (answers.confirm) {
+        return db.deleteDepartment(answers.department);
+      }
+      return false;
+    })
+    .then(res => {
+      if (res === null) {
+        return console.log("\nNo departments found\n");
+      } else if (res === false) {
+        return console.log("\nDelete aborted\n");
+      }
+      return console.log(`\n${res.affectedRows} department deleted\n`)
+    });
+}
+
 /* -------- Core PROMPT Function ---------- */
 
 /* Prompt for primary action */
@@ -221,6 +244,9 @@ function actionPrompt(db) {
             break;
           case "Delete Role":
             await deleteRole(db);
+            break;
+          case "Delete Department":
+            await deleteDepartment(db);
             break;
         }
         return actionPrompt(db);

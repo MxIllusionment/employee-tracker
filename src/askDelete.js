@@ -62,7 +62,7 @@ async function deleteRole(db) {
     },
     {
       type: "confirm",
-      message: answers => "This will delete all employees with this role! Are you sure?",
+      message: "This will delete all employees with this role! Are you sure?",
       name: "confirm",
       default: false
     }
@@ -72,7 +72,47 @@ async function deleteRole(db) {
   return inquirer.prompt(question);
 }
 
+/* Asks user to select from available departments to delete */
+async function deleteDepartment(db) {
+  const departments = await db.queryDepartments();
+  let deptChoices = [];
+
+  /* Construct department options from query */
+  departments.forEach(dept => deptChoices.push(
+    {
+      name: dept.name,
+      value: dept.id
+    }
+  ));
+
+  /* If there are no departments, return a value to indicate this */
+  if (deptChoices.length === 0) {
+    return null;
+  }
+
+  /* Form inquirer question */
+  const question = [
+    {
+      type: "list",
+      message: "Which department would you like to delete?",
+      name: "department",
+      loop: false,
+      choices: deptChoices
+    },
+    {
+      type: "confirm",
+      message: "This will delete all roles and employees in this department! Are you sure?",
+      name: "confirm",
+      default: false
+    }
+  ];
+
+  /* Prompt for department choice */
+  return inquirer.prompt(question);
+}
+
 module.exports = {
   employee: deleteEmployee,
-  role: deleteRole
+  role: deleteRole,
+  department: deleteDepartment
 };

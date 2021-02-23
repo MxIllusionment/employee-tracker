@@ -19,7 +19,7 @@ CREATE TABLE role (
     salary DECIMAL(10,2) NOT NULL,
     department_id INTEGER NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (department_id) REFERENCES department(id)
+    FOREIGN KEY (department_id) REFERENCES department(id) ON DELETE CASCADE
 );
 
 -- CREATE employee table --
