@@ -3,6 +3,7 @@ require("console.table");
 const ask = require("./askSelector");
 const create = require("./askCreate");
 const update = require("./askUpdate");
+const del = require("./askDelete");
 
 /* Inquirer questions for basic actions */
 const actionQuestions = [
@@ -20,6 +21,7 @@ const actionQuestions = [
       "Add Role",
       "Add Employee",
       "Update Employee",
+      "Delete Employee",
       "Exit"
     ]
   }
@@ -144,6 +146,22 @@ async function updateEmployee(db) {
     });
 }
 
+/* Deletes a selected employee */
+async function deleteEmployee(db) {
+  return del.employee(db)
+    .then(answers => {
+      if (!answers) {
+        return null;
+      }
+      return db.deleteEmployee(answers.employee)
+        .then(res => {
+          if (!res) {
+            return console.log("\nNo employees found\n");
+          }
+          return console.log(`\n${res.affectedRows} employee deleted\n`)
+        });
+    });
+}
 /* -------- Core PROMPT Function ---------- */
 
 /* Prompt for primary action */
@@ -175,6 +193,9 @@ function actionPrompt(db) {
             break;
           case "Update Employee":
             await updateEmployee(db);
+            break;
+          case "Delete Employee":
+            await deleteEmployee(db);
             break;
         }
         return actionPrompt(db);
