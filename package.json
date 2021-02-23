@@ -4,7 +4,9 @@
   "description": "An exercise in MySQL database management via command-line application",
   "main": "tracker.js",
   "scripts": {
-    "start": "node tracker.js"
+    "start": "node tracker.js",
+    "schema": "mysql --user=root --password=12345678 < schema.sql",
+    "seed": "mysql --user=root --password=12345678 < seed.sql"
   },
   "repository": {
     "type": "git",

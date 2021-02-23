@@ -1,3 +1,6 @@
+-- USE employee_tracker_db for all transactions --
+USE employee_tracker_db;
+
 -- Example starting data --
 INSERT INTO department (name) VALUES ("Sales");
 INSERT INTO department (name) VALUES ("Engineering");
