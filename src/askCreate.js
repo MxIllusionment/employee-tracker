@@ -148,6 +148,7 @@ async function createEmployee(db) {
       type: "list",
       name: "manager_id",
       message: "Who is the new employee's manager?",
+      loop: false,
       choices: mgrChoices,
       when: () => mgrChoices.length > 1
     }
