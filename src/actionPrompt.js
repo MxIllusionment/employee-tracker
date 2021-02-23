@@ -100,7 +100,7 @@ async function addRole(db) {
     })
     .then(res => {
       if (!res) {
-        return console.log("\nNo departments available\n");
+        return console.log("\nNo departments found\n");
       }
       return console.log(`\n${res.affectedRows} role added\n`)
     });
@@ -117,7 +117,7 @@ async function addEmployee(db) {
     })
     .then(res => {
       if (!res) {
-        return console.log("\nNo roles available\n");
+        return console.log("\nNo roles found\n");
       }
       return console.log(`\n${res.affectedRows} employee added\n`)
     });
@@ -180,7 +180,7 @@ async function deleteRole(db) {
       if (res === null) {
         return console.log("\nNo roles found\n");
       } else if (res === false) {
-        return console.log("\nDelete aborted\n");
+        return console.log("\nDelete canceled\n");
       }
       return console.log(`\n${res.affectedRows} role deleted\n`)
     });
@@ -201,7 +201,7 @@ async function deleteDepartment(db) {
       if (res === null) {
         return console.log("\nNo departments found\n");
       } else if (res === false) {
-        return console.log("\nDelete aborted\n");
+        return console.log("\nDelete canceled\n");
       }
       return console.log(`\n${res.affectedRows} department deleted\n`)
     });
