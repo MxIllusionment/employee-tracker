@@ -11,12 +11,13 @@ db.start()
     console.log("--------------------------------");
 
     /* Process inquirer questions */
-    actionPrompt(db)
-      .then(() => {
-        console.log("--------------------------------");
-        console.log("Exiting Employee Tracker. Farewell!");
-        db.exit();
-      });
+    return actionPrompt(db);
+  })
+  /* Shutdown display and close database connection */
+  .then(() => {
+    console.log("--------------------------------");
+    console.log("Exiting Employee Tracker. Farewell!");
+    db.exit();
   });
 
 
