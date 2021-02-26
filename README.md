@@ -31,7 +31,7 @@ Execute with
 npm start
 ```
 
-[Walkthrough Video](#)
+[Walkthrough Video](https://drive.google.com/file/d/1m389vn_IZQ8imBYda6Zr66sUnC3oFoTl/view?usp=sharing)
 
 ## License  
 This application is covered under the **ISC** license. More info can be found here: [ISC](https://opensource.org/licenses/ISC)
