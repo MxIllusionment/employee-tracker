@@ -8,7 +8,6 @@ This is only intended to interact with a localhost MySQL server initialized with
 ## Table of Contents
 * [Installation](#Installation)
 * [Usage](#Usage)
-* [Deployment](#Deployment)
 * [License](#License)
 * [Questions](#Questions)
 * [Credits](#Credits)
